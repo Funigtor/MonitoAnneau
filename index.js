@@ -27,9 +27,14 @@ var server = http.createServer(function(req, res) {
     }
     if ('device' in params) {
       console.log('device: ' + params['device']);
-      var devises = new array;
-      db.collection().forEach(function(elmnt,index,array){
+      var devices = new Array;
+      db.collection(coll).find().toArray(function(error, results) {
+        if (error) throw error;
 
+        results.forEach(function(elmnt,index,array){
+          if(elmnt.device === params['device']) devices.push(elmnt);
+        });
+        console.log(devices);
       });
     }else{
       result += "device: " + params['device'] + '\n';
