@@ -4,6 +4,7 @@
   "description": "Prendre des petits bouts de trucs pour les assembler ensemble",
   "main": "index.js",
   "dependencies": {
+    "chart.js": "^2.7.1",
     "express": "^4.16.2",
     "mongodb": "^3.0.1"
   },
