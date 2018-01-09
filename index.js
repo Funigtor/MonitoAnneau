@@ -43,15 +43,14 @@ var server = http.createServer(function(req, res) {
         if (error) throw error;
 
         console.log(results);
-        /*results.forEach(function(obj, i) {
+        results.forEach(function(obj, i) {
           console.log(
             "Device : " + obj.device + "\n" +
             "date : " + obj.date + "\n" +
             "heure : " + obj.date["heure"] + "\n" +
             "temperature :" + obj.temperature + "\n" +
             "Consommation (A): " + obj.consoAmp + "\n"
-          );*/
-          //console.log(obj);
+          );
         });
 
     }
