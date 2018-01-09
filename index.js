@@ -53,7 +53,7 @@ var server = http.createServer(function(req, res) {
           );
         });
 
-    }
+    });
     if ('dd' in params && 'df' in params) {
       result += "Date Début: " + params['dd'] + '\n' + "Date fin: " + params['df'] + '\n';
       console.log(result);
