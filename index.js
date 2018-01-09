@@ -1,7 +1,7 @@
 var http = require('http'); //require serveur WEB
 var url = require('url'); //pour les URL
 var querystring = require('querystring');
-var MongoClient = require("mongodb").MongoClient;
+var MongoClient = require("mongodb").MongoClient; 
 
 var server = http.createServer(function(req, res) {
 
@@ -68,6 +68,7 @@ var server = http.createServer(function(req, res) {
     }
     res.write(result);
     res.end();
-  });
+  };
+});
 });
 server.listen(8080);
