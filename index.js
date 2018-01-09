@@ -1,7 +1,7 @@
 var http = require('http'); //require serveur WEB
 var url = require('url'); //pour les URL
 var querystring = require('querystring');
-var MongoClient = require("mongodb").MongoClient; 
+var MongoClient = require("mongodb").MongoClient;
 
 var server = http.createServer(function(req, res) {
 
@@ -18,16 +18,17 @@ var server = http.createServer(function(req, res) {
 
     var db = client.db('monitoanneau');
     let coll;
+    var devices = [1,2];
 
     if ('piece' in params) {
       result += "piece: " + params['piece'] + '\n';
       coll = params['piece'];
-
-      console.log(result);
+      s
+     console.log("devices: "+devices);
     }
     if ('device' in params) {
       console.log('device: ' + params['device']);
-      var devices = new Array;
+
       db.collection(coll).find().toArray(function(error, results) {
         if (error) throw error;
 
@@ -42,7 +43,7 @@ var server = http.createServer(function(req, res) {
       db.collection(coll).find().toArray(function(error, results) {
         if (error) throw error;
 
-        console.log(results);
+        /*console.log(results);
         results.forEach(function(obj, i) {
           console.log(
             "Device : " + obj.device + "\n" +
@@ -51,12 +52,21 @@ var server = http.createServer(function(req, res) {
             "temperature :" + obj.temperature + "\n" +
             "Consommation (A): " + obj.consoAmp + "\n"
           );
-        });
+        });*/
 
     });
-    if ('dd' in params && 'df' in params) {
-      result += "Date Début: " + params['dd'] + '\n' + "Date fin: " + params['df'] + '\n';
-      console.log(result);
+    if ('dd' in params  ) {
+      if('df' in params){
+        result += "Date Début: " + params['dd'] + '\n' + "Date fin: " + params['df'] + '\n';
+        console.log(result);
+      }else{
+        result += "Date Début: " + params['dd'] + '\n' + "Date fin:" + "DerniereDate" + '\n';
+      }
+
+
+
+
+
     } else {
       result += "DernièreDate \n";
       console.log(result);
