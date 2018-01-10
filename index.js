@@ -18,7 +18,7 @@ var server = http.createServer(function(req, res) {
     console.log("connected to Monitoanneau");
     var db = client.db('monitoanneau');
     if ('piece' in params) {
-      db.collection("cuisine").find().toArray(function(error, results) {
+      db.collection(params['piece']).find().toArray(function(error, results) {
         if (error) throw error;
         results.forEach(function(obj, i) {
           /*  console.log(
@@ -53,20 +53,20 @@ var server = http.createServer(function(req, res) {
         console.log(params['df']);
         var dateFin = isADate(params['df']);
 
-
+        tmp = new Array();
         device.forEach(function(obj, i) {
           if(inInterval(dateDebut,dateFin,obj.date[0],obj.heure[0]))
-            console.log('bkdflb');
-          /*console.log(
-                "ID :     " + obj._id.toString() + "\n"
-              + "Date:    " + obj.date[0].jour   + " / " + obj.date[0].mois + " / " +  obj.date[0].annee + "\n"
-              + "Heure:   " + obj.heure[0].heure + ' : ' + obj.heure[0].minute + "\n"
-              + "Device : " + obj.device + '\n\n'
-          );*/
-
+            tmp.push(obj);
         });
+        device = tmp;
+        console.log(device);
+      }else{
+        device = device[device.length-1];
+        console.log(device);
       }
+
     }
+
   }
 
   function isADate(chaine) {
@@ -81,12 +81,16 @@ var server = http.createServer(function(req, res) {
       }
     } else console.error(chaine + " n'est PAS une date !!!");
   }
+
   function inInterval(debut,fin,date,heure){
-    if(date.jour < fin[0] && date.mois < fin[1] && date.annee < fin[2])
-      console.log("true");
-    else
-    console.log(date.jour, fin[0] , date.mois , fin[1] , date.annee , fin[2]);
-      console.log("false");
+
+    if(parseInt(date.jour) <= fin[0] && parseInt(date.mois)  <= fin[1] && parseInt(date.annee) <= fin[2]){
+      //console.log(date.jour, fin[0] , parseInt(date.mois) , fin[1] , parseInt(date.annee) , fin[2]);
+      //console.log("true");
+      return true;
+    }
+    return false;
+
   }
   res.end();
 });
