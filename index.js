@@ -32,20 +32,26 @@ var server = http.createServer(function (req, res) {
             );*/
         });
         devices = results;
-        desync();
+        desync(db);
       });
     }
   });
 
-  function desync() {
+  function desync(db) {
     //console.log(devices);
     if ('input' in params) {
       var input = new Object();
-      for ([key, value] in params) {
-        if (key != "input") Object.defineProperty(input, key, value);
+      for (key in params) {
+        let value = params[key];
+        let valueToAdd = new Object();
+        valueToAdd.value = value;
+        if (key != "input") Object.defineProperty(input, key, valueToAdd);
       }
 
-      client.db.collections(input.piece).insert(input);
+      db.collection(input.piece).insert(input, null, function (error, results) {
+        if (error) throw error;
+        console.log("Document inséré")
+      });
       return
     }
     if ('device' in params) {
@@ -55,9 +61,9 @@ var server = http.createServer(function (req, res) {
         //console.log(elmnt);
       });
       device = tmp;
-      if(device.length === 0)
+      if (device.length === 0)
         console.error(params['device'] + "n'existe pas ! \n exit()");
-        return;
+      return;
       //console.log(device);
     }
     if ('dd' in params) {
