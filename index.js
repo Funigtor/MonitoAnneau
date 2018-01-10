@@ -17,15 +17,7 @@ var server = http.createServer(function (req, res) {
 
     console.log("connected to Monitoanneau");
     var db = client.db('monitoanneau');
-    if ('input' in params) {
-      var input = new Object();
-      for ([key, value] in params) {
-        if (key != "input") Object.defineProperty(input, key, value);
-      }
 
-      client.db.collections(input.piece).insert(input);
-      return
-    }
 
     if ('piece' in params) {
       db.collection(params['piece']).find().toArray(function (error, results) {
@@ -47,6 +39,15 @@ var server = http.createServer(function (req, res) {
 
   function desync() {
     //console.log(devices);
+    if ('input' in params) {
+      var input = new Object();
+      for ([key, value] in params) {
+        if (key != "input") Object.defineProperty(input, key, value);
+      }
+
+      client.db.collections(input.piece).insert(input);
+      return
+    }
     if ('device' in params) {
       var tmp = new Array();
       devices.forEach(function (elmnt, index) {
@@ -54,6 +55,9 @@ var server = http.createServer(function (req, res) {
         //console.log(elmnt);
       });
       device = tmp;
+      if(device.length === 0)
+        console.error(params['device'] + "n'existe pas ! \n exit()");
+        return;
       //console.log(device);
     }
     if ('dd' in params) {
