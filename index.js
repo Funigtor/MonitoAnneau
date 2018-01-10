@@ -22,16 +22,8 @@ var server = http.createServer(function (req, res) {
     if ('piece' in params) {
       db.collection(params['piece']).find().toArray(function (error, results) {
         if (error) throw error;
-        results.forEach(function (obj, i) {
-          /*  console.log(
-                  "ID : "  + obj._id.toString() + "\n" // 53dfe7bbfd06f94c156ee96e
-                + "Jour: " + obj.date.jour + "\n"
-                + "Mois: " + obj.date.mois + "\n"
-                + "Jour: " + obj.date.annee + "\n"           // Adrian Shephard
-                + "Device : " + obj.device                  // Half-Life: Opposing Force
-            );*/
-        });
         devices = results;
+        //console.log(devices)
         desync(db);
       });
     }
@@ -54,16 +46,19 @@ var server = http.createServer(function (req, res) {
       });
       return
     }
+
     if ('device' in params) {
+
       var tmp = new Array();
       devices.forEach(function (elmnt, index) {
         if (elmnt.device === params['device']) tmp.push(elmnt);
         //console.log(elmnt);
       });
-      device = tmp;
-      if (device.length === 0)
+      devices = tmp;
+      if (devices.length === 0){
         console.error(params['device'] + "n'existe pas ! \n exit()");
       return;
+    }
       //console.log(device);
     }
     if ('dd' in params) {
@@ -78,15 +73,15 @@ var server = http.createServer(function (req, res) {
           if (inInterval(dateDebut, dateFin, obj.date[0], obj.heure[0]))
             tmp.push(obj);
         });
-        device = tmp;
-        console.log(device);
+        devices = tmp;
+        //console.log(device);
       } else {
-        device = device[device.length - 1];
-        console.log(device);
+        devices = device[device.length - 1];
+        //console.log(devices);
       }
 
     }
-
+    console.log(devices);
   }
 
   function isADate(chaine) {
