@@ -18,12 +18,17 @@ var server = http.createServer(function(req, res) {
 
     var db = client.db('monitoanneau');
     let coll;
-    var devices = [1,2];
+    var devices = undefined;
 
     if ('piece' in params) {
       result += "piece: " + params['piece'] + '\n';
       coll = params['piece'];
-      s
+      db.collection(coll,function(err,myCollection){
+        myCollection.find().toArray(function(err, items) {
+                 console.log(items);
+
+             });
+      });
      console.log("devices: "+devices);
     }
     if ('device' in params) {
@@ -55,6 +60,7 @@ var server = http.createServer(function(req, res) {
         });*/
 
     });
+  }
     if ('dd' in params  ) {
       if('df' in params){
         result += "Date Début: " + params['dd'] + '\n' + "Date fin: " + params['df'] + '\n';
@@ -78,7 +84,7 @@ var server = http.createServer(function(req, res) {
     }
     res.write(result);
     res.end();
-  };
+
 });
 });
 server.listen(8080);
