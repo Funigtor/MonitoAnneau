@@ -61,33 +61,40 @@ var server = http.createServer(function (req, res) {
     }
       //console.log(device);
     }
-    if ('dd' in params) {
-      var dateDebut = isADate(params['dd']);
+    var dateDebut = false;
+    var dateFin = false;
+    if('dd' in params){
+      dateDebut = isADate(params['dd']);
       console.log(dateDebut);
-      if ('df' in params) {
-        console.log(params['df']);
-        var dateFin = isADate(params['df']);
-
-        tmp = new Array();
-        device.forEach(function (obj, i) {
-          if (inInterval(dateDebut, dateFin, obj.date[0], obj.heure[0]))
-            tmp.push(obj);
-        });
-        devices = tmp;
-        //console.log(device);
-      } else {
-        devices = device[device.length - 1];
-        //console.log(devices);
-      }
-
+    }else{
+      var date = devices[0].date[0];
+      dateDebut = [date.jour,date.mois,date.annee];
+      console.log("premierre date " + dateDebut );
     }
-    console.log(devices);
+    if('df' in params){
+      dateFin = isADate(params['df']);
+      console.log(dateFin);
+    }else{
+      var date = devices[devices.length-1].date[0];
+      dateFin = [date.jour,date.mois,date.annee];
+      console.log("dernierre date " + dateFin );
+    }
+    if(dateDebut || dateFin){
+    devices.forEach(function (obj, i) {
+      if (inInterval(dateDebut, dateFin, obj.date[0], obj.heure[0]))
+        tmp.push(obj);
+    });
+    devices = tmp;
+  }
+  var string = JSON.stringify(devices)
+  res.write(string);
+  res.end();
   }
 
   function isADate(chaine) {
     var regDate = new RegExp("\\d\\d/\\d\\d/\\d\\d\\d\\d");
     if (regDate.test(chaine)) {
-      console.log(chaine + " passe dans l'expression rég");
+      //console.log(chaine + " passe dans l'expression rég");
       var regex = /\s?([/])\s?/;
       var resultat = chaine.split(regex);
       resultat = [parseInt(resultat[0]), parseInt(resultat[2]), parseInt(resultat[4])];
@@ -107,6 +114,6 @@ var server = http.createServer(function (req, res) {
     return false;
 
   }
-  res.end();
+
 });
 server.listen(8080);
