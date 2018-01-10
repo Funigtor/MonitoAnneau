@@ -3,7 +3,7 @@ var url = require('url'); //pour les URL
 var querystring = require('querystring');
 var MongoClient = require("mongodb").MongoClient;
 
-var server = http.createServer(function(req, res) {
+var server = http.createServer(function (req, res) {
 
   var params = querystring.parse(url.parse(req.url).query);
   var result = "";
@@ -12,15 +12,25 @@ var server = http.createServer(function(req, res) {
     "Content-Type": "text/plain"
   });
 
-  MongoClient.connect("mongodb://monito:friteusse@145.239.78.38:587/monitoanneau", function(error, client) {
+  MongoClient.connect("mongodb://monito:friteusse@145.239.78.38:587/monitoanneau", function (error, client) {
     if (error) throw error;
 
     console.log("connected to Monitoanneau");
     var db = client.db('monitoanneau');
+    if ('input' in params) {
+      var input = new Object();
+      for ([key, value] in params) {
+        if (key != "input") Object.defineProperty(input, key, value);
+      }
+
+      client.db.collections(input.piece).insert(input);
+      return
+    }
+
     if ('piece' in params) {
-      db.collection(params['piece']).find().toArray(function(error, results) {
+      db.collection(params['piece']).find().toArray(function (error, results) {
         if (error) throw error;
-        results.forEach(function(obj, i) {
+        results.forEach(function (obj, i) {
           /*  console.log(
                   "ID : "  + obj._id.toString() + "\n" // 53dfe7bbfd06f94c156ee96e
                 + "Jour: " + obj.date.jour + "\n"
@@ -39,7 +49,7 @@ var server = http.createServer(function(req, res) {
     //console.log(devices);
     if ('device' in params) {
       var tmp = new Array();
-      devices.forEach(function(elmnt, index) {
+      devices.forEach(function (elmnt, index) {
         if (elmnt.device === params['device']) tmp.push(elmnt);
         //console.log(elmnt);
       });
@@ -54,14 +64,14 @@ var server = http.createServer(function(req, res) {
         var dateFin = isADate(params['df']);
 
         tmp = new Array();
-        device.forEach(function(obj, i) {
-          if(inInterval(dateDebut,dateFin,obj.date[0],obj.heure[0]))
+        device.forEach(function (obj, i) {
+          if (inInterval(dateDebut, dateFin, obj.date[0], obj.heure[0]))
             tmp.push(obj);
         });
         device = tmp;
         console.log(device);
-      }else{
-        device = device[device.length-1];
+      } else {
+        device = device[device.length - 1];
         console.log(device);
       }
 
@@ -82,9 +92,9 @@ var server = http.createServer(function(req, res) {
     } else console.error(chaine + " n'est PAS une date !!!");
   }
 
-  function inInterval(debut,fin,date,heure){
+  function inInterval(debut, fin, date, heure) {
 
-    if(parseInt(date.jour) <= fin[0] && parseInt(date.mois)  <= fin[1] && parseInt(date.annee) <= fin[2]){
+    if (parseInt(date.jour) <= fin[0] && parseInt(date.mois) <= fin[1] && parseInt(date.annee) <= fin[2]) {
       //console.log(date.jour, fin[0] , parseInt(date.mois) , fin[1] , parseInt(date.annee) , fin[2]);
       //console.log("true");
       return true;
