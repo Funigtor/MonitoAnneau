@@ -37,15 +37,13 @@ var server = http.createServer(function (req, res) {
         let value = params[key];
         let valueToAdd = new Object();
         valueToAdd.value = value;
-
-        if (key != "input") defProp(input, 4, key, value);
+        if (key != "input") Object.defineProperty(input, key, valueToAdd);
       }
-      console.log(JSON.stringify(input));
+
       db.collection(input.piece).insert(input, null, function (error, results) {
         if (error) throw error;
-        console.log("Document inséré:");
+        console.log("Document inséré")
       });
-      res.end();
       return
     }
 
@@ -116,38 +114,6 @@ var server = http.createServer(function (req, res) {
     return false;
 
   }
-var oDesc = {};
-  function defProp (oObj, nMask, sKey, vVal_fGet, fSet) {
-  if (nMask & 8) {
-    // descripteur d'accesseur
-    if (vVal_fGet) {
-      oDesc.get = vVal_fGet;
-    } else {
-      delete oDesc.get;
-    }
-    if (fSet) {
-      oDesc.set = fSet;
-    } else {
-      delete oDesc.set;
-    }
-    delete oDesc.value;
-    delete oDesc.writable;
-  } else {
-    // descripteur de données
-    if (arguments.length > 3) {
-      oDesc.value = vVal_fGet;
-    } else {
-      delete oDesc.value;
-    }
-    oDesc.writable = Boolean(nMask & 4);
-    delete oDesc.get;
-    delete oDesc.set;
-  }
-  oDesc.enumerable = Boolean(nMask & 1);
-  oDesc.configurable = Boolean(nMask & 2);
-  Object.defineProperty(oObj, sKey, oDesc);
-  return oObj;
-}
 
 });
 server.listen(8080);
