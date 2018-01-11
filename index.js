@@ -30,6 +30,8 @@ var server = http.createServer(function (req, res) {
   });
 
   function desync(db) {
+    console.log("[?] params :" + JSON.stringify(params));
+
     //console.log(devices);
     if ('input' in params) {
       params.input = undefined;
@@ -60,29 +62,25 @@ var server = http.createServer(function (req, res) {
     if('dd' in params){
       dateDebut = isADate(params['dd']);
       console.log(dateDebut);
-    }else{
-      var date = devices[0].date[0];
-      dateDebut = [date.jour,date.mois,date.annee];
-      console.log("premierre date " + dateDebut );
     }
     if('df' in params){
       dateFin = isADate(params['df']);
       console.log(dateFin);
-    }else{
-      var date = devices[devices.length-1].date[0];
-      dateFin = [date.jour,date.mois,date.annee];
-      console.log("dernierre date " + dateFin );
     }
     if(dateDebut || dateFin){
+      tmp = new Array();
     devices.forEach(function (obj, i) {
-      if (inInterval(dateDebut, dateFin, obj.date[0], obj.heure[0]))
+      if (inInterval(dateDebut, dateFin, obj.date[0], obj.heure[0])){
         tmp.push(obj);
+        //console.log("[+] Push");
+      }
     });
     devices = tmp;
   }
   var string = JSON.stringify(devices)
   res.write(string);
   res.end();
+  console.log("[+] Done.");
   }
 
   function isADate(chaine) {
@@ -99,15 +97,29 @@ var server = http.createServer(function (req, res) {
   }
 
   function inInterval(debut, fin, date, heure) {
-
-    if (parseInt(date.jour) <= fin[0] && parseInt(date.mois) <= fin[1] && parseInt(date.annee) <= fin[2]) {
+    if(!debut){
+      if (parseInt(date.jour) <= fin[0] && parseInt(date.mois) <= fin[1] && parseInt(date.annee) <= fin[2]) {
+        //console.log(date.jour, fin[0] , parseInt(date.mois) , fin[1] , parseInt(date.annee) , fin[2]);
+        //console.log(parseInt(date.jour), debut[0] , parseInt(date.mois) , debut[1] , parseInt(date.annee) , debut[2]);
+        //console.log("true");
+        return true;
+      }
+    }
+    if(!fin){
+      if (parseInt(date.jour) >= debut[0] && parseInt(date.mois) >= debut[1] && parseInt(date.annee) >= debut[2] ) {
+        //console.log(date.jour, fin[0] , parseInt(date.mois) , fin[1] , parseInt(date.annee) , fin[2]);
+        //console.log(parseInt(date.jour), debut[0] , parseInt(date.mois) , debut[1] , parseInt(date.annee) , debut[2]);
+        //console.log("true");
+        return true;
+      }
+    }
+    if ((parseInt(date.jour) <= fin[0] && parseInt(date.mois) <= fin[1] && parseInt(date.annee) <= fin[2])&& (parseInt(date.jour) >= debut[0] && parseInt(date.mois) >= debut[1] && parseInt(date.annee) >= debut[2]) ) {
       //console.log(date.jour, fin[0] , parseInt(date.mois) , fin[1] , parseInt(date.annee) , fin[2]);
-      //console.log("true");
+      //console.log(parseInt(date.jour), debut[0] , parseInt(date.mois) , debut[1] , parseInt(date.annee) , debut[2]);
+      console.log("true");
       return true;
     }
-    return false;
-
+      return false;
   }
-
 });
 server.listen(8080);
