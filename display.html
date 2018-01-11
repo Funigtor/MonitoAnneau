@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <head>
     <title>Affichage de données</title>
+    <meta charset="utf-8">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script>
 </head>
 <body>
-    <canvas id="chart" width="400" height="400"></canvas>
+    <canvas id="chart" width="800" height="400"></canvas>
     <script>
         var ctx = document.getElementById("chart").getContext("2d");
 
         var config = new Object();
         config.type = "line";
         config.options = {
+            responsive: false,
+            maintainAspectRatio: true,
             scales: {
                 yAxes: [{
                     ticks: {
@@ -31,11 +34,21 @@
         else console.log("Ça marche pas")
 
         // reception données
-        var data = new Array();
-        for (document of dataDevice) {
-            data.push(document.temperature);
+        
+        config.data = new Object();
+        var labelGraph = new Array;
+        var dataGraph = new Array;
+        for (doc of dataDevice){
+            let valeur = Number(doc.valeur);
+            console.log(doc.valeur);
+            console.log(valeur);
+            if (valeur != NaN) {
+                labelGraph.push("ah");
+                dataGraph.push(valeur);
+            }
         }
-        config.data = data;
+        config.data.labels = labelGraph;
+        config.data.datasets = [{data: dataGraph}];
         var chart = new Chart(ctx, config);
     </script>
 </body>

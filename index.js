@@ -47,9 +47,11 @@ var server = http.createServer(function(req, res) {
               console.error("collection " + params['piece'] + " not found.");
             }
           });
-        } else
+        } else {
           console.error("pas de nom de coollection...");
-
+          res.end();
+        }
+          
       }
       function selectInbDD() {
         var tmp = params;
