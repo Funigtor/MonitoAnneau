@@ -6,6 +6,7 @@
   "dependencies": {
     "express": "^4.16.2",
     "mongodb": "^3.0.1",
+    "serialport": "^6.0.4",
     "socketio": "^1.0.0"
   },
   "devDependencies": {},
