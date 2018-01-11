@@ -2,6 +2,8 @@ var http = require('http'); //require serveur WEB
 var url = require('url'); //pour les URL
 var querystring = require('querystring');
 var MongoClient = require("mongodb").MongoClient;
+const fs = require('fs');
+fs.writeFile("/tmp/pidMonito",process.pid);
 
 var server = http.createServer(function (req, res) {
 
