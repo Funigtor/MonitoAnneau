@@ -1,12 +1,6 @@
 var SerialPort = require('serialport');
-
 const request = require('request');
-
-request('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY', { json: true }, (err, res, body) => {
-  if (err) { return console.log(err); }
-  console.log(body.url);
-  console.log(body.explanation);
-});
+var http = require('http');
 
 const Readline = SerialPort.parsers.Readline;
 const port = new SerialPort('/dev/ttyACM0');
@@ -17,9 +11,16 @@ function move(data ){
   var start = new Date();
   data = data.substring(0,data.length-1);
   console.log(data);
-
+  var url = "http://145.239.78.38:80?insert&collection=chambre&device=temperature&valeur="+data;
+  request(url, function(error, response, body) {});
 }
 
+/*  request("http://145.239.78.89:80?insert&collection=chambre&device=temperature&valeur="+data, function(err, res, body){
+    if (err) { return console.log(err); }
+    console.log(body.url);
+    console.log(body.explanation);
+  });
+*/
 
 /*var MongoClient = require("mongodb").MongoClient;
 MongoClient.connect("mongodb://monito:friteusse@145.239.78.38:587/monitoanneau", function(error, client) {

@@ -8,6 +8,6 @@ void loop() {
   val2= analogRead(A8);
   dat = (double) val2 * (5/10.24);
   Serial.println(dat);
-  delay(60000);
+  delay(5000);
 }
 
