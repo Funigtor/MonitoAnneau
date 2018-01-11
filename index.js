@@ -4,6 +4,7 @@ var querystring = require('querystring');
 var MongoClient = require("mongodb").MongoClient;
 const fs = require('fs');
 fs.writeFileSync("/tmp/pidMonito", process.pid);
+const displayFile = fs.readFileSync("display.html");
 
 var server = http.createServer(function(req, res) {
 
@@ -29,6 +30,9 @@ var server = http.createServer(function(req, res) {
         if ('find' in params) {
           console.log("find");
           findInBDD();
+        }
+        if ('chart' in params) {
+          sendChart();
         }
       }
       function findInBDD() {
@@ -74,6 +78,13 @@ var server = http.createServer(function(req, res) {
         });
         res.end();
         return
+      }
+
+      function sendChart(){
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.write(displayFile,function(){
+          res.end();
+        })
       }
   });
 });
