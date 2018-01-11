@@ -13,21 +13,18 @@ var server = http.createServer(function(req, res) {
   res.writeHead(200, {
     "Content-Type": "text/plain"
   });
-
+    console.log("[+] connection to Monitoanneau.")
   MongoClient.connect("mongodb://monito:friteusse@145.239.78.38:587/monitoanneau", function(error, client) {
       if (error) throw error;
-      console.log("connected to Monitoanneau");
+      console.log("[+] connected to Monitoanneau/");
       var db = client.db('monitoanneau');
       selectOption();
       return;
       function selectOption() {
-        console.log("params" + JSON.stringify(params));
         if ('insert' in params) {
-          console.log("insert");
           insertInBDD();
         }
         if ('find' in params) {
-          console.log("find");
           findInBDD();
         }
       }
@@ -37,14 +34,13 @@ var server = http.createServer(function(req, res) {
             if (error) throw error;
             if (results.length != 0) {
               devices = results;
-              console.log("coollections " + results.length);
               selectInbDD();
             } else {
-              console.error("collection " + params['piece'] + " not found.");
+              console.error("[!] collection " + params['collection'] + " not found.");
             }
           });
         } else
-          console.error("pas de nom de coollection...");
+          console.error("[!] pas de nom de coollection...");
 
       }
       function selectInbDD() {
@@ -52,14 +48,12 @@ var server = http.createServer(function(req, res) {
         delete tmp.find;
         delete tmp.collection;
         for (key in params) {
-          console.log(key);
           var tab = new Array();
           devices.forEach(function(elmnt, index) {
             if (elmnt[key] === params[key]) tab.push(elmnt);
           });
           devices = tab;
         }
-
         res.write(JSON.stringify(devices));
         res.end();
       }
@@ -67,10 +61,9 @@ var server = http.createServer(function(req, res) {
       function insertInBDD(newObj) {
         var tmp = params;
         delete tmp.insert;
-        console.log(JSON.stringify(params));
         db.collection(params['collection']).insert(params, null, function(error, results) {
           if (error) throw error;
-          console.log("Document inséré")
+          console.log("[+] Document inséré")
         });
         res.end();
         return
