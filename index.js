@@ -32,18 +32,12 @@ var server = http.createServer(function (req, res) {
   function desync(db) {
     //console.log(devices);
     if ('input' in params) {
-      var input = new Object();
-      for (key in params) {
-        let value = params[key];
-        let valueToAdd = new Object();
-        valueToAdd.value = value;
-        if (key != "input") Object.defineProperty(input, key, valueToAdd);
-      }
-
-      db.collection(input.piece).insert(input, null, function (error, results) {
+      params.input = undefined;
+      db.collection(params.piece).insert(params, null, function (error, results) {
         if (error) throw error;
         console.log("Document inséré")
       });
+      res.end();
       return
     }
 
