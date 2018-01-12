@@ -13,6 +13,9 @@
         var config = new Object();
         config.type = "line";
         config.options = {
+            legend: {
+                display: false
+            },            
             responsive: false,
             maintainAspectRatio: true,
             scales: {
@@ -51,7 +54,12 @@
             }
         }
         config.data.labels = labelGraph;
-        config.data.datasets = [{data: dataGraph}];
+        config.data.datasets = [{
+            data: dataGraph,
+            fill: false,
+            borderColor: 'rgba(255, 0, 0, 1)',
+            label: " "
+        }];
         var chart = new Chart(ctx, config);
     </script>
 </body>
