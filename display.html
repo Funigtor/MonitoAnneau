@@ -3,6 +3,7 @@
     <title>Affichage de données</title>
     <meta charset="utf-8">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/URI.js/1.19.0/URI.min.js"></script>
 </head>
 <body>
     <canvas id="chart" width="800" height="400"></canvas>
@@ -24,8 +25,12 @@
         };
 
         // demande données
-        var url = document.location.href;
-        var jsonURL = url.replace("chart", "find");
+        var url = new URI(document.location.href);
+        var result = URI.parseQuery(document.location.search);
+        var x = result.x; var y = result.y;
+        url.removeSearch("x");url.removeSearch("y");url.removeSearch("chart");
+        url.addSearch("find");
+        var jsonURL = "http://"+ document.location.host + "/?" + url._parts.query;
         var req = new XMLHttpRequest();
         req.open('GET', jsonURL, false);
         req.send(null);
@@ -40,11 +45,9 @@
         var dataGraph = new Array;
         for (doc of dataDevice){
             let valeur = Number(doc.valeur);
-            console.log(doc.valeur);
-            console.log(valeur);
-            if (valeur != NaN) {
-                labelGraph.push("ah");
-                dataGraph.push(valeur);
+            if (doc[y] != NaN) {
+                (x && doc[x] != undefined) ? labelGraph.push(doc[x]) : labelGraph.push("");
+                dataGraph.push(doc[y]);
             }
         }
         config.data.labels = labelGraph;
