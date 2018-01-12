@@ -34,6 +34,9 @@ var server = http.createServer(function (req, res) {
       if ('chart' in params) {
         sendChart();
       }
+      if ('erase' in params) {
+        eraseInBDD();
+      }
     }
 
     function findInBDD() {
@@ -46,6 +49,7 @@ var server = http.createServer(function (req, res) {
             selectInbDD();
           } else {
             console.error("collection " + params['collection'] + " not found.");
+            res.end();
           }
         });
       } else {
