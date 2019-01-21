@@ -1,8 +1,7 @@
-var http = require('http'); //require serveur WEB
-var url = require('url'); //pour les URL
-var querystring = require('querystring');
-var MongoClient = require("mongodb").MongoClient;
-var MongoObjectID = require("mongodb").ObjectID;
+const http = require('http'); //require serveur WEB
+const url = require('url'); //pour les URL
+const querystring = require('querystring');
+const MongoClient = require("mongodb").MongoClient;
 const fs = require('fs');
 const displayFile = fs.readFileSync("display.html");
 
@@ -20,7 +19,6 @@ var server = http.createServer(function (req, res) {
     console.log("[+] connected to Monitoanneau");
     var db = client.db("monnit'home");
     selectOption();
-    return;
 
     function selectOption() {
       if ('insert' in params) {
@@ -42,25 +40,6 @@ var server = http.createServer(function (req, res) {
           if (error) throw error;
           if (results.length != 0) {
             devices = results;
-            console.log("collections " + results.length);
-            selectInbDD();
-          } else {
-            console.log("[!] La collection est vide.");
-            res.end();
-          }
-        });
-    }
-    if ('find' in params) {
-      findInBDD();
-    }
-    if ('erase' in params) {
-      eraseInBDD();
-    }
-    function findInBDD() {
-        db.collection("default").find().toArray(function (error, results) {
-          if (error) throw error;
-          if (results.length != 0) {
-            devices = results;
             selectInbDD();
           } else {
             console.error("[!] La collection default est vide");
@@ -69,8 +48,7 @@ var server = http.createServer(function (req, res) {
         });
     }
     function selectInbDD() {
-      var tmp = params;
-      delete tmp.find;
+      delete params.find;
       for (key in params) {
         var tab = new Array();
         devices.forEach(function (elmnt, index) {
@@ -97,7 +75,6 @@ var server = http.createServer(function (req, res) {
         console.log("[+] Document inséré")
       });
       res.end();
-      return
     }
     function eraseInBDD() {
         if ('id' in params) {
@@ -113,7 +90,6 @@ var server = http.createServer(function (req, res) {
           res.end()
         }
     }
-    res.end();
   });
 });
 server.listen(8080);
