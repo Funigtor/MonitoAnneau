@@ -10,6 +10,19 @@ var server = http.createServer(function (req, res) {
   var params = querystring.parse(url.parse(req.url).query);
   var result = "";
   var devices = undefined;
+  new Date();
+ 
+
+  // Website you wish to allow to connect
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  // Request methods you wish to allow
+  res.setHeader('Access-Control-Allow-Methods', 'GET');
+
+  // Request headers you wish to allow
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+  // Pass to next layer of middleware
   res.writeHead(200, {
     "Content-Type": "text/plain"
   });
@@ -68,9 +81,15 @@ var server = http.createServer(function (req, res) {
       })
     }
     function insertInBDD(newObj) {
-      var tmp = params;
-      delete tmp.insert;
-      db.collection("default").insert(params, null, function (error, results) {
+      var date =  Date.now()/1000;
+      //console.log(date);
+      var parameters = params;
+      var tmp = JSON.parse(JSON.stringify(parameters));
+      var k= {"time":date};
+      tmp["time"] = date;
+      console.log(tmp);
+      //delete tmp.insert;
+      db.collection("default").insertOne(tmp, null, function (error, results) {
         if (error) throw error;
         console.log("[+] Document inséré")
       });
